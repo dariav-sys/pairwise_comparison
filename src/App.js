@@ -1,25 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import Form from "./components/Form";
+import Pairwise from "./components/Pairwise";
+import Result from "./components/Result";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends Component {
+  ActiveState = {
+    FORM: 0,
+    PAIRWISE: 1,
+    RESULT: 2,
+  };
+
+  state = {
+    activeState: this.ActiveState.FORM,
+    buttonNum: 0,
+    result: [],
+  };
+
+  handleFormSubmit = (buttonNum) => {
+    this.setState({
+      activeState: this.ActiveState.PAIRWISE,
+      buttonNum,
+    });
+  };
+
+  handlePairwiseSubmit = (result) => {
+    this.setState({
+      activeState: this.ActiveState.RESULT,
+      result: result,
+    });
+  };
+
+  render() {
+    if (this.state.activeState === this.ActiveState.FORM) {
+      return <Form onSubmit={this.handleFormSubmit} />;
+    }
+
+    if (this.state.activeState === this.ActiveState.PAIRWISE) {
+      return (
+        <Pairwise
+          onSubmit={this.handlePairwiseSubmit}
+          buttonNum={this.state.buttonNum}
+        />
+      );
+    }
+
+    if (this.state.activeState === this.ActiveState.RESULT) {
+      return <Result result={this.state.result} />;
+    }
+  }
 }
-
-export default App;
