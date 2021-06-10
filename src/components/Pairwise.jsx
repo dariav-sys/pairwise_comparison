@@ -3,14 +3,14 @@ import shortid from "shortid";
 
 import ToggleButton from "./Button";
 
-const ENGLISH = "abcdefghijklmnopqrstuvwxyz".split("");
+const alphabet = "ABCDEFGHIJKLMNOPRST".split("");
 
 export default class Pairwise extends Component {
   toggleButtons = [];
   result = [];
 
   handleSubmitResult = () => {
-    this.result.sort((a, b) => b.score - a.score);    
+    this.result.sort((a, b) => b.score - a.score);
     this.props.onSubmit(this.result);
   };
 
@@ -25,7 +25,7 @@ export default class Pairwise extends Component {
   };
 
   render() {
-    const splicedArr = [...ENGLISH].splice(0, this.props.buttonNum);
+    const splicedArr = [...alphabet].splice(0, this.props.buttonNum);
     this.toggleButtons = [];
     this.result = [];
     for (let i = 0; i < this.props.buttonNum; i++) {
