@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { CSSTransition } from "react-transition-group";
 import Form from "./components/Form";
 import Pairwise from "./components/Pairwise";
 import Result from "./components/Result";
@@ -14,12 +15,14 @@ export default class App extends Component {
     activeState: this.ActiveState.FORM,
     buttonNum: 0,
     result: [],
+    show: false,
   };
 
   handleFormSubmit = (buttonNum) => {
     this.setState({
       activeState: this.ActiveState.PAIRWISE,
       buttonNum,
+      show: true,
     });
   };
 
