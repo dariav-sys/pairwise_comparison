@@ -2,19 +2,32 @@ import React, { Component } from "react";
 import shortid from "shortid";
 
 export default class ToggleButton extends Component {
-  state = {
-    toggle: false,
+  ToggleState = {
+    NONE: 0,
+    LEFT: 1,
+    RIGHT: 2,
   };
 
-  toggleState = () => {
-    this.setState({
-      toggle: !this.state.toggle,
-    });
+  state = {
+    toggle: this.ToggleState.NONE,
+  };
 
-    if (!this.state.toggle) {
-      this.props.onChange(this.props.rightLabel, this.props.leftLabel);
+  toggleState = (e) => {
+    const isFirstToggle = this.state.toggle === this.ToggleState.NONE;
+    if (e.currentTarget.value === this.props.leftLabel) {
+      this.setState({ toggle: this.ToggleState.LEFT });
+      this.props.onChange(
+        this.props.leftLabel,
+        this.props.rightLabel,
+        isFirstToggle
+      );
     } else {
-      this.props.onChange(this.props.leftLabel, this.props.rightLabel);
+      this.setState({ toggle: this.ToggleState.RIGHT });
+      this.props.onChange(
+        this.props.rightLabel,
+        this.props.leftLabel,
+        isFirstToggle
+      );
     }
   };
 
@@ -28,7 +41,7 @@ export default class ToggleButton extends Component {
           value={this.props.leftLabel}
           name="switchToggle"
           onChange={this.toggleState}
-          checked={!this.state.toggle}
+          checked={this.state.toggle === this.ToggleState.LEFT}
         />
         <label htmlFor={`${this.props.leftLabel}_${id}`}>
           {this.props.leftLabel}
@@ -40,7 +53,7 @@ export default class ToggleButton extends Component {
           name="switchToggle"
           value={this.props.rightLabel}
           onChange={this.toggleState}
-          checked={this.state.toggle}
+          checked={this.state.toggle === this.ToggleState.RIGHT}
         />
         <label htmlFor={`${this.props.rightLabel}_${id}`}>
           {this.props.rightLabel}

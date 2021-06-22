@@ -4,48 +4,47 @@ import Pairwise from "./components/Pairwise";
 import Result from "./components/Result";
 
 export default class App extends Component {
-  ActiveState = {
-    FORM: 0,
-    PAIRWISE: 1,
-    RESULT: 2,
-  };
-
   state = {
-    activeState: this.ActiveState.FORM,
-    buttonNum: 0,
+    options: [],
     result: [],
   };
 
-  handleFormSubmit = (buttonNum) => {
+  handleFormSubmit = (options) => {
+    let result = [];
+    options.forEach((option) => {
+      const found = this.state.result.find((el) => el.label === option);
+      const score = found ? found.score : 0;
+      result.push({ label: option, score });
+    });
+
     this.setState({
-      activeState: this.ActiveState.PAIRWISE,
-      buttonNum,
+      options,
+      result,
     });
   };
 
   handlePairwiseSubmit = (result) => {
     this.setState({
-      activeState: this.ActiveState.RESULT,
       result: result,
     });
   };
 
   render() {
-    if (this.state.activeState === this.ActiveState.FORM) {
-      return <Form onSubmit={this.handleFormSubmit} />;
-    }
-
-    if (this.state.activeState === this.ActiveState.PAIRWISE) {
-      return (
-        <Pairwise
-          onSubmit={this.handlePairwiseSubmit}
-          buttonNum={this.state.buttonNum}
-        />
-      );
-    }
-
-    if (this.state.activeState === this.ActiveState.RESULT) {
-      return <Result result={this.state.result} />;
-    }
+    return (
+      <>
+        <div className="wrapper">
+          <div className="resultField">
+            <Form onSubmit={this.handleFormSubmit} />
+            <Result result={this.state.result} />
+          </div>
+          <div className="resultField">
+            <Pairwise
+              onSubmit={this.handlePairwiseSubmit}
+              options={this.state.options}
+            />
+          </div>
+        </div>
+      </>
+    );
   }
 }

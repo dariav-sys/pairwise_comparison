@@ -2,45 +2,43 @@ import React, { Component } from "react";
 
 export default class Form extends Component {
   state = {
-    buttonNum: 0,
-  };
-
-  handleChange = (e) => {
-    this.setState({ buttonNum: Number(e.currentTarget.value) });
+    optionName: "",
+    options: [],
   };
 
   handleSubmit = (e) => {
     e.preventDefault();
-    this.props.onSubmit(this.state.buttonNum);
+    if (
+      !this.state.optionName ||
+      this.state.options.includes(this.state.optionName)
+    )
+      return;
+
+    this.state.options.push(this.state.optionName);
+    this.props.onSubmit(this.state.options);
+    this.setState({ optionName: "" });
+  };
+
+  handleChange = (e) => {
+    this.setState({ optionName: e.currentTarget.value });
   };
 
   render() {
     return (
       <>
-        <form className="form">
+        <form className="form" onSubmit={this.handleSubmit}>
           <label htmlFor={this.nameInputId}>
-            <select
+            <input
               className="input"
-              type="select"
+              type="text"
               name="newItem"
-              value={this.state.name}
+              value={this.state.optionName}
               onChange={this.handleChange}
-              placeholder="Choose number"
-              defaultValue="DEFAULT"
-            >
-              <option value="DEFAULT" disabled>
-                -- select an option --
-              </option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-            </select>
+              placeholder="Enter item"
+            />
           </label>
-          <button className="btn-add" type="submit" onClick={this.handleSubmit}>
-            RUN
+          <button className="btn-add" type="submit">
+            Add
           </button>
         </form>
       </>

@@ -2,6 +2,8 @@ import React from "react";
 import shortid from "shortid";
 
 const Result = ({ result }) => {
+  result.sort((a, b) => b.score - a.score);
+
   let arr = [];
   for (let i = 0; i < result.length; i++) {
     let className = i === 0 ? "green" : "";

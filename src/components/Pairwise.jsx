@@ -3,54 +3,52 @@ import shortid from "shortid";
 
 import ToggleButton from "./Button";
 
-const alphabet = "ABCDEFGHIJKLMNOPRST".split("");
-
 export default class Pairwise extends Component {
   toggleButtons = [];
   result = [];
 
-  handleSubmitResult = () => {
-    this.result.sort((a, b) => b.score - a.score);
-    this.props.onSubmit(this.result);
-  };
-
-  handleChange = (labelToIncr, labelToDecr) => {
+  handleChange = (labelToIncr, labelToDecr, isFirstToggle) => {
     this.result.forEach((el) => {
       if (el.label === labelToIncr) {
         el.score++;
-      } else if (el.label === labelToDecr) {
+      } else if (el.label === labelToDecr && !isFirstToggle) {
         el.score--;
       }
     });
+    this.props.onSubmit(this.result);
   };
 
   render() {
-    const splicedArr = [...alphabet].splice(0, this.props.buttonNum);
-    this.toggleButtons = [];
-    this.result = [];
-    for (let i = 0; i < this.props.buttonNum; i++) {
-      let label = splicedArr[i];
-      let score = 0;
-      for (let j = i + 1; j < this.props.buttonNum; j++) {
-        this.toggleButtons.push(
-          <ToggleButton
-            key={shortid.generate()}
-            leftLabel={splicedArr[i]}
-            rightLabel={splicedArr[j]}
-            onChange={this.handleChange}
-          />
-        );
-        score++;
+    for (let i = 0; i < this.props.options.length; i++) {
+      let label = this.props.options[i];
+      for (let j = i + 1; j < this.props.options.length; j++) {
+        if (
+          !this.toggleButtons.find(
+            (el) =>
+              el.props.leftLabel === this.props.options[i] &&
+              el.props.rightLabel === this.props.options[j]
+          )
+        ) {
+          this.toggleButtons.push(
+            <ToggleButton
+              key={shortid.generate()}
+              leftLabel={this.props.options[i]}
+              rightLabel={this.props.options[j]}
+              onChange={this.handleChange}
+            />
+          );
+        }
       }
-      this.result.push({ label, score });
+
+      if (!this.result.find((el) => el.label === label))
+        this.result.push({ label, score: 0 });
     }
+
     return (
       <>
         <div className="btn-container">
-          {this.toggleButtons}
-          <button className="btn" onClick={this.handleSubmitResult}>
-            Get result
-          </button>
+          {this.toggleButtons.length ? <h1>Compare Items</h1> : ""}
+          <div>{this.toggleButtons}</div>
         </div>
       </>
     );
